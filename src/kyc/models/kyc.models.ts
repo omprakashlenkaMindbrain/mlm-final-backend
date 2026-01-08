@@ -18,7 +18,7 @@ export interface Ikyc extends Document{
 const kycSchema = new mongoose.Schema<Ikyc>({
     userid:{
         type:mongoose.Schema.ObjectId,  
-        ref:"UserModel"
+        ref:"User"
     },
     adhara_img:{
         type:String,

@@ -11,7 +11,7 @@ import {
 } from "../controller/session.controller";
 
 // KYC
-import { updateKycStatus } from "../../kyc/controller/kyc.controller";
+import { getKycdetails, updateKycStatus } from "../../kyc/controller/kyc.controller";
 
 // Admin / Users / Plan
 import { generateIncomeController } from "../controller/admin.genincome.controller";
@@ -84,9 +84,9 @@ Adminroutes.delete(
 
 // PUT /api/admin/kyc/update/:id
 Adminroutes.put(
-  "/kyc/update/:id",
+  "/kyc/update/:userid",
   requireAdmin,
-  updateKycStatus
+  updateKycStatus 
 );
 
 // PUT /api/admin/plan/update/:id
@@ -155,6 +155,7 @@ Adminroutes.get(
 // POST /api/admin/bankdetails
 Adminroutes.post(
   "/bankdetails",
+  requireAdmin,
   createbankdetailscontroller
 );
 
@@ -177,6 +178,7 @@ Adminroutes.get(
   requireAdmin,
   payoutcontroller
 );
+Adminroutes.get("/getkyc/:userId",requireAdmin,getKycdetails)
 
 /* ================= TEST ================= */
 
