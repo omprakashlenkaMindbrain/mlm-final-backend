@@ -1,6 +1,7 @@
 import jwt, { SignOptions } from "jsonwebtoken";
 import config from "config";
 
+
 const secret = config.get<string>("secretKey");
 
 export function signJwt(
@@ -14,6 +15,8 @@ export function signJwt(
 export function verifyJwt<T = object>(token: string): { decode: T | null; expired: boolean } {
   try {
     const decoded = jwt.verify(token, secret) as T;
+    
+    // console.log(decoded)
     return {
       decode: decoded,
       expired: false,
