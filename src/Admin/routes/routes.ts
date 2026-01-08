@@ -30,6 +30,7 @@ import {
   updatedbankdetails,
 } from "../controller/bankdetails.controller";
 import { payoutcontroller } from "../controller/payout.controller";
+import { postPayoutController } from "../controller/admin.postpayout.controller";
 
 // QR
 import {
@@ -176,8 +177,21 @@ Adminroutes.get(
 Adminroutes.get(
   "/payout",
   requireAdmin,
+  postPayoutController
+);
+
+Adminroutes.get(
+  "/payout",
+  requireAdmin,
   payoutcontroller
 );
+
+Adminroutes.post(
+  "/payout",
+  requireAdmin,
+  payoutcontroller
+);
+
 Adminroutes.get("/getkyc/:userId",requireAdmin,getKycdetails)
 
 /* ================= TEST ================= */
