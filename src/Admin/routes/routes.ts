@@ -84,9 +84,9 @@ Adminroutes.delete(
 
 // PUT /api/admin/kyc/update/:id
 Adminroutes.put(
-  "/kyc/update/:id",
+  "/kyc/update/:userid",
   requireAdmin,
-  updateKycStatus
+  updateKycStatus 
 );
 
 // PUT /api/admin/plan/update/:id

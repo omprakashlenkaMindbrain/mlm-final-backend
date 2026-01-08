@@ -13,6 +13,7 @@ export interface UserDocument extends mongoose.Document {
   referralCount: number;
   leftLeg?: string | null;
   rightLeg?: string | null;
+  kycstatus:"approved" | "rejected" | "pending"
 
 
   totalLeft: number;
@@ -87,7 +88,11 @@ const userSchema = new mongoose.Schema<UserDocument>(
     recentIncome:{type: Number, default: 0 },
     totalwithdrawincome: { type: Number, default: 0 },
     netincome: { type: Number, default: 0 },
-
+    kycstatus: {
+      type: String,
+      enum: ["pending", "approved", "rejected"],
+      default: "pending",
+    },
     isActive: { type: Boolean, default: true },
   
   },

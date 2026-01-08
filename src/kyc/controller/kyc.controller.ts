@@ -188,17 +188,26 @@ export const updatekyc = async (req: Request, res: Response) => {
 /* ======================================================
    ADMIN: UPDATE KYC STATUS (APPROVE / REJECT)
 ====================================================== */
+
+
 export const updateKycStatus = async (req: Request, res: Response) => {
   try {
-    const { id } = req.params;
+    const { userid } = req.params;
     const { status } = req.body;
 
+    
     if (!["approved", "rejected", "pending"].includes(status)) {
       return res.status(400).json({ message: "Invalid KYC status" });
     }
 
-    const updatedKyc = await kycmodel.findByIdAndUpdate(
-      id,
+    // Validate userId
+    if (!mongoose.Types.ObjectId.isValid(userid)) {
+      return res.status(400).json({ message: "Invalid User ID" });
+    }
+
+    // Update KYC using userid
+    const updatedKyc = await kycmodel.findOneAndUpdate(
+      { userid }, // key change
       {
         status,
         reviewedAt: new Date(),
@@ -207,7 +216,7 @@ export const updateKycStatus = async (req: Request, res: Response) => {
     );
 
     if (!updatedKyc) {
-      return res.status(404).json({ message: "KYC record not found" });
+      return res.status(404).json({ message: "KYC record not found for this user" });
     }
 
     return res.status(200).json({
@@ -216,7 +225,7 @@ export const updateKycStatus = async (req: Request, res: Response) => {
       data: updatedKyc,
     });
   } catch (error: any) {
-    console.error("Admin KYC status update error:", error);
+    console.error("Admin KYC update error:", error);
     return res.status(500).json({
       success: false,
       message: "Failed to update KYC status",
