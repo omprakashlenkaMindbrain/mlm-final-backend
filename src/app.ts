@@ -10,6 +10,8 @@ import Adminroutes from "./Admin/routes/routes";
 import userRouter from "./User/routes/routes";
 import kycrouter from "./kyc/routes/kyc.routes";
 import planrouter from "./plan/routes/plan.routes";
+import autocollectionRoute from "./autocollection/routes/autocollection.routes";
+
 
 /* ===================== USER SESSION ===================== */
 import {
@@ -88,6 +90,7 @@ app.use("/api/admin", Adminroutes);
 app.use("/api/user", userRouter);
 app.use("/api/kyc", kycrouter);
 app.use("/api/plan", planrouter);
+app.use('/api/autocollection',autocollectionRoute);
 
 /* ===================== SERVER ===================== */
 async function startServer() {
