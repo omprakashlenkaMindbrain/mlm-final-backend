@@ -16,6 +16,7 @@ export async function postPayoutController(_req:Request,res: Response) {
     }
 
     const payoutUsers = await payout();
+    console.log(payoutUsers)
 
     if (!payoutUsers.length) {
       return res.status(200).json({
@@ -25,7 +26,7 @@ export async function postPayoutController(_req:Request,res: Response) {
       });
     }
 
-    const responseData: any[] = [];
+  var responseData: any[] = [];
 
     for (const item of payoutUsers) {
       const user = await UserModel.findById(item.userId);
@@ -38,8 +39,7 @@ export async function postPayoutController(_req:Request,res: Response) {
       const totalwithdrawincome = Number(user.totalwithdrawincome || 0);
 
       
-      const adminAmount =
-        (recentIncome * autoCollection.admincharges) / 100;
+      const adminAmount =autoCollection.admincharges;
       const tdsAmount =
         (recentIncome * autoCollection.tds) / 100;
       const netPayout = recentIncome - (adminAmount + tdsAmount);
@@ -56,20 +56,20 @@ export async function postPayoutController(_req:Request,res: Response) {
       });
 
       
-      user.totalwithdrawincome = totalwithdrawincome + netPayout;
-      user.netincome = user.totalwithdrawincome + totalIncome;
+      user.totalwithdrawincome = totalwithdrawincome + recentIncome;
+      user.netincome = totalIncome-user.totalwithdrawincome;
       user.recentIncome = 0;
 
       const savedUser = await user.save();
-
-      
       responseData.push({
         user: {
           _id: savedUser._id,
           email: savedUser.email,
           name: savedUser.name,
           totalwithdrawincome: savedUser.totalwithdrawincome,
+           
           netincome: savedUser.netincome,
+
         },
         payoutHistory: {
           payoutId: payoutHistory._id,
@@ -78,15 +78,18 @@ export async function postPayoutController(_req:Request,res: Response) {
           tds: tdsAmount,
           netPayout: netPayout,
           date: payoutHistory.createdAt,
-        },
+        }
+        
       });
+      
     }
-
+    
     return res.status(200).json({
       success: true,
       message: "Payout processed successfully",
       autoCollection,
-      payoutUsers
+      payoutUsers,
+      responseData
     });
   } catch (error: any) {
     console.error("Payout error:", error);

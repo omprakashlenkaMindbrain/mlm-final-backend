@@ -8,6 +8,7 @@ export async function payout() {
     totalIncome: { $gte: 500 },
     isActive: true,
   })
+  //recentIncome: { $gte: 500 },
 
   if (!users.length) return [];
 
