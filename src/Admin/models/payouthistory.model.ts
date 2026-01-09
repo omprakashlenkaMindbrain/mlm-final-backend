@@ -1,16 +1,20 @@
 import mongoose, { Schema, Document } from "mongoose";
 
 export enum PayoutStatus {
-  success = "success",
-  pending = "pending",
+  SUCCESS = "success",
+  PENDING = "pending",
 }
 
 export interface IPayoutHistory extends Document {
   userId: mongoose.Types.ObjectId;
   payoutAmount: number;
+  tds: number;
+  adminCharges: number;
   remark?: string;
   status: PayoutStatus;
-  date: Date;
+  payoutDate: Date;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 const PayoutHistorySchema = new Schema<IPayoutHistory>(
@@ -19,25 +23,45 @@ const PayoutHistorySchema = new Schema<IPayoutHistory>(
       type: Schema.Types.ObjectId,
       ref: "User",
       required: true,
+      index: true,
     },
+
     payoutAmount: {
       type: Number,
       required: true,
     },
+
+    tds: {
+      type: Number,
+      required: true,
+      default: 0,
+    },
+
+    adminCharges: {
+      type: Number,
+      required: true,
+      default: 0,
+    },
+
     remark: {
       type: String,
+      trim: true,
     },
+
     status: {
       type: String,
       enum: Object.values(PayoutStatus),
-      default: PayoutStatus.pending,
+      default: PayoutStatus.PENDING,
     },
-    date: {
+
+    payoutDate: {
       type: Date,
       default: Date.now,
     },
   },
-  { timestamps: true }
+  {
+    timestamps: true,
+  }
 );
 
 export const PayoutHistoryModel = mongoose.model<IPayoutHistory>(

@@ -47,6 +47,7 @@ import validateResources from "../middlewares/validateResource";
 
 import { createAdminSchema } from "../schema/admin.schema";
 import { createSessionSchema } from "../schema/session.schema";
+import { getAllPayoutHistoryController, getUserPayoutHistoryController } from "../controller/admin.payouthistory.controller";
 
 const Adminroutes = express.Router();
 
@@ -186,10 +187,6 @@ Adminroutes.get(
   payoutcontroller
 );
 
-Adminroutes.post(
-  "/payout",
-  payoutcontroller
-);
 
 Adminroutes.get("/getkyc/:userId",requireAdmin,getKycdetails)
 
@@ -198,5 +195,10 @@ Adminroutes.get("/getkyc/:userId",requireAdmin,getKycdetails)
 Adminroutes.get("/test", (_req: Request, res: Response) => {
   res.status(200).send("Hello world from the test api");
 });
+
+//admin payout history
+
+Adminroutes.get('/payouthistory',getAllPayoutHistoryController);
+Adminroutes.get('/payouthistory/user/:userId',getUserPayoutHistoryController);
 
 export default Adminroutes;

@@ -4,12 +4,8 @@ import { payout } from "../services/payout.service";
 import { PayoutHistoryModel } from "../models/payouthistory.model";
 import autocollectionmodel from "../../autocollection/models/autocollection";
 
-
 export async function postPayoutController(req: Request, res: Response) {
-
-
   try {
-    
     const autoCollection = await autocollectionmodel.findOne().lean();
 
     if (!autoCollection) {
@@ -25,50 +21,66 @@ export async function postPayoutController(req: Request, res: Response) {
       return res.status(200).json({
         success: true,
         message: "No users eligible for payout",
-        updatedCount: 0,
+        data: [],
       });
     }
 
-    let updatedCount = 0;
+    const responseData: any[] = [];
 
     for (const item of payoutUsers) {
       const user = await UserModel.findById(item.userId);
-
       if (!user) continue;
-      if (user.recentIncome <= 0) continue; 
 
-      const recentIncome = user.recentIncome;
-      const totalIncome = user.totalIncome || 0;
-      const prevWithdrawIncome = user.totalwithdrawincome || 0;
+      const recentIncome = Number(user.recentIncome);
+      if (recentIncome <= 0) continue;
 
-    
-      const adminCharge = autoCollection.admincharges;
-      const tds = autoCollection.tds;
-
+      const totalIncome = Number(user.totalIncome || 0);
+      const totalwithdrawincome = Number(user.totalwithdrawincome || 0);
 
       
-      await PayoutHistoryModel.create(
-        [
-          {
-            userId: user._id,
-            payoutAmount: user.recentIncome,
-            remark: `Admin: ${adminCharge}% | TDS: ${tds}%`,
-          },
-        ],
-      );
+      const adminAmount =
+        (recentIncome * autoCollection.admincharges) / 100;
+      const tdsAmount =
+        (recentIncome * autoCollection.tds) / 100;
+      const netPayout = recentIncome - (adminAmount + tdsAmount);
 
-    
-      user.totalwithdrawincome =
-        prevWithdrawIncome + recentIncome;
+      
+      const payoutHistory = await PayoutHistoryModel.create({
+        userId: user._id,
+        userRecentIncome: recentIncome,
+        adminCharges: adminAmount,
+        tds: tdsAmount,
+        payoutAmount: netPayout,
+        remark: `Gross: ${recentIncome} | Admin: ${adminAmount} | TDS: ${tdsAmount}`,
+        status: "success",
+      });
+
+      
+      user.totalwithdrawincome = totalwithdrawincome + netPayout;
+      user.netincome = user.totalwithdrawincome + totalIncome;
       user.recentIncome = 0;
-      user.netincome =
-        user.totalwithdrawincome - totalIncome;
 
-      await user.save();
-      updatedCount++;
+      const savedUser = await user.save();
+
+      
+      responseData.push({
+        user: {
+          _id: savedUser._id,
+          email: savedUser.email,
+          name: savedUser.name,
+          totalwithdrawincome: savedUser.totalwithdrawincome,
+          netincome: savedUser.netincome,
+        },
+        payoutHistory: {
+          payoutId: payoutHistory._id,
+          grossIncome: recentIncome,
+          adminCharges: adminAmount,
+          tds: tdsAmount,
+          netPayout: netPayout,
+          date: payoutHistory.createdAt,
+        },
+      });
     }
-
-  
 
     return res.status(200).json({
       success: true,
@@ -77,9 +89,7 @@ export async function postPayoutController(req: Request, res: Response) {
       payoutUsers,
       updatedCount,
     });
-
-  } catch (error:any) {
-
+  } catch (error: any) {
     console.error("Payout error:", error);
     return res.status(500).json({
       success: false,
@@ -87,4 +97,3 @@ export async function postPayoutController(req: Request, res: Response) {
     });
   }
 }
-
