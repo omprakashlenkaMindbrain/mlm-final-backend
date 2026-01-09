@@ -143,6 +143,7 @@ const netRight = totalRightBV - (user.rightusetotal ?? 0);
         "totalrightbv",
       ]),
       totalLeft,
+  
       totalRight,
       totalleftbv: totalLeftBV,
       totalrightbv: totalRightBV,

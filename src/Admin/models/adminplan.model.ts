@@ -22,8 +22,8 @@ const planSchema = new Schema<IAdminPlan>(
       type: String,
       required: true,
       trim: true,
-      unique: true, // ✅ prevent duplicate plans
-      index: true,  // ✅ faster lookup
+      unique: true, 
+      index: true,  
     },
 
     plan_price: {

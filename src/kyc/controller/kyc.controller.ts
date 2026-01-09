@@ -193,7 +193,9 @@ export const updatekyc = async (req: Request, res: Response) => {
 export const updateKycStatus = async (req: Request, res: Response) => {
   try {
     const { userid } = req.params;
-    const { status } = req.body;
+    const { status,admincoment } = req.body;
+  
+
 
     
     if (!["approved", "rejected", "pending"].includes(status)) {
@@ -210,6 +212,7 @@ export const updateKycStatus = async (req: Request, res: Response) => {
       { userid }, // key change
       {
         status,
+        adminComment:admincoment,
         reviewedAt: new Date(),
       },
       { new: true }
