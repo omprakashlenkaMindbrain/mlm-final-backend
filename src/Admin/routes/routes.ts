@@ -24,6 +24,7 @@ import { showDownlineController } from "../controller/adminshowdownline.controll
 import { createAdminHandler } from "../controller/user.controller";
 
 // Bank / Payout
+import { postPayoutController } from "../controller/admin.postpayout.controller";
 import {
   createbankdetailscontroller,
   getBankdetails,
@@ -45,11 +46,12 @@ import validateResources from "../middlewares/validateResource";
 
 /* ================= Schemas ================= */
 
+import { getAllPayoutHistoryController, getUserPayoutHistoryController } from "../controller/admin.payouthistory.controller";
 import { createAdminSchema } from "../schema/admin.schema";
 import { createSessionSchema } from "../schema/session.schema";
-import { getAllPayoutHistoryController, getUserPayoutHistoryController } from "../controller/admin.payouthistory.controller";
 
 const Adminroutes = express.Router();
+
 
 /* ================= ADMIN AUTH ================= */
 
@@ -170,16 +172,15 @@ Adminroutes.put(
 // GET /api/admin/getbankdetails
 Adminroutes.get(
   "/getbankdetails",
-  requireAdmin,
   getBankdetails
 );
 
 // GET /api/admin/payout
-// Adminroutes.post(
-//   "/payout",
-//   requireAdmin,
-//   postPayoutController
-// );
+Adminroutes.post(
+  "/payout",
+  requireAdmin,
+  postPayoutController
+);
 
 Adminroutes.get(
   "/payout",

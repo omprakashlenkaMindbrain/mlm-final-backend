@@ -52,7 +52,7 @@ export const getAllPlanDetails = async (req: Request, res: Response) => {
 
     const [plans, totalPlans] = await Promise.all([
       PlanModel.find()
-        .populate("userId", "name email mobno memId")
+        .populate("userId", "name email mobno memId totalIncome totalwithdrawincome")
         .sort({ createdAt: -1 })
         .skip(skip)
         .limit(limit),

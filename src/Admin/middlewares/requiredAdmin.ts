@@ -1,3 +1,4 @@
+import console from "console";
 import { NextFunction, Request, Response } from "express";
 import mongoose from "mongoose";
 import { verifyJwt } from "../../utils/jwt.utils";
@@ -7,6 +8,7 @@ export async function requireAdmin(req: Request, res: Response, next: NextFuncti
   const token =
     req.headers.authorization?.replace("Bearer ", "") ||
     req.cookies?.accessToken;
+    
  
   if (!token) {
     return res.status(401).json({ message: "No token provided" });

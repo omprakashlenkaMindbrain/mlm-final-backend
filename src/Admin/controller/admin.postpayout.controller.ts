@@ -1,10 +1,10 @@
 import { Request, Response } from "express";
-import UserModel from "../../User/models/user.model";
-import { payout } from "../services/payout.service";
-import { PayoutHistoryModel } from "../models/payouthistory.model";
 import autocollectionmodel from "../../autocollection/models/autocollection";
+import UserModel from "../../User/models/user.model";
+import { PayoutHistoryModel } from "../models/payouthistory.model";
+import { payout } from "../services/payout.service";
 
-export async function postPayoutController(req: Request, res: Response) {
+export async function postPayoutController(_req:Request,res: Response) {
   try {
     const autoCollection = await autocollectionmodel.findOne().lean();
 
@@ -86,8 +86,7 @@ export async function postPayoutController(req: Request, res: Response) {
       success: true,
       message: "Payout processed successfully",
       autoCollection,
-      payoutUsers,
-      updatedCount,
+      payoutUsers
     });
   } catch (error: any) {
     console.error("Payout error:", error);
