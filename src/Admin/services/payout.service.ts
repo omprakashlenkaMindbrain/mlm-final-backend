@@ -7,7 +7,7 @@ export async function payout() {
   const users = await UserModel.find({
     totalIncome: { $gte: 500 },
     isActive: true,
-  }).select("_id memId leftLeg rightLeg");
+  });
 
   if (!users.length) return [];
 
@@ -76,9 +76,10 @@ export async function payout() {
     //  Eligible payout user WITH BANK DETAILS
     payoutUsers.push({
       userId: user._id,
-      memId: user.memId,
+      // memId: user.memId,
       account_no: kycData.account_no,
       account_holder_name: kycData.account_holder_name,
+      users
     });
   }
 
