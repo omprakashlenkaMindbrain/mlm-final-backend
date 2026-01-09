@@ -74,6 +74,7 @@ export async function postPayoutController(req: Request, res: Response) {
       success: true,
       message: "Payout processed successfully",
       autoCollection,
+      payoutUsers,
       updatedCount,
     });
 

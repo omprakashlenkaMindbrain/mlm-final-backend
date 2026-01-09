@@ -27,6 +27,7 @@ import validateResources from "./User/middlewares/validateResource";
 /* ===================== AUTH ===================== */
 import deserializeAdmin from "./Admin/middlewares/deserializeAdmin";
 import deserializeUser from "./User/middlewares/deserializeUser";
+import { incomerouter } from "./incomehistory/incomehistory.routes";
 
 const app: Application = express();
 const port = config.get<number>("port") || 8090;
@@ -91,6 +92,7 @@ app.use("/api/user", userRouter);
 app.use("/api/kyc", kycrouter);
 app.use("/api/plan", planrouter);
 app.use('/api/autocollection',autocollectionRoute);
+app.use("/api/", incomerouter);
 
 /* ===================== SERVER ===================== */
 async function startServer() {

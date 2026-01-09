@@ -249,6 +249,8 @@ export interface DownlineNode {
   email: string;
   plan: string|null;
   trackingId:string|null
+  totalIncome:number | null
+  selfBV:number | null
   // totalLeft:number
   // totalRight:number
   }
@@ -286,6 +288,8 @@ async function buildTree(memId: string): Promise<DownlineNode | null> {
     leftLeg: left,
     rightLeg: right,
     trackingId: user.trackingId ?? null,
+    totalIncome:user.totalIncome,
+    selfBV:plan ? plan.bv : null
     // totalLeft:totalleftleg,
     // totalRight:totalrightleg
     
@@ -295,8 +299,7 @@ async function buildTree(memId: string): Promise<DownlineNode | null> {
 export async function getDownlineTree(
   memId: string
 ): Promise<DownlineNode | null> {
-  const user = await UserModel.findOne({ memId }).lean();
+  const user = await UserModel.findOne({ memId }).lean()
   if (!user) throw new Error("User not found");
-
   return buildTree(memId);
 }

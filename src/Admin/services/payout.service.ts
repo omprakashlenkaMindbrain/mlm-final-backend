@@ -1,13 +1,13 @@
+import kycmodel from "../../kyc/models/kyc.models";
 import { planmodel } from "../../plan/model/plan.model";
 import UserModel from "../../User/models/user.model";
-import kycmodel from "../../kyc/models/kyc.models";
 
 export async function payout() {
   //  Users with income ≥ 500
   const users = await UserModel.find({
     totalIncome: { $gte: 500 },
     isActive: true,
-  }).select("_id memId leftLeg rightLeg");
+  })
 
   if (!users.length) return [];
 
@@ -79,6 +79,7 @@ export async function payout() {
       memId: user.memId,
       account_no: kycData.account_no,
       account_holder_name: kycData.account_holder_name,
+      users
     });
   }
 
