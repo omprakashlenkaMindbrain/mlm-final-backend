@@ -178,7 +178,6 @@ Adminroutes.get(
 // GET /api/admin/payout
 Adminroutes.post(
   "/payout",
-  requireAdmin,
   postPayoutController
 );
 
