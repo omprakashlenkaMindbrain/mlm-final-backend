@@ -1,13 +1,13 @@
+import kycmodel from "../../kyc/models/kyc.models";
 import { planmodel } from "../../plan/model/plan.model";
 import UserModel from "../../User/models/user.model";
-import kycmodel from "../../kyc/models/kyc.models";
 
 export async function payout() {
   //  Users with income ≥ 500
   const users = await UserModel.find({
     totalIncome: { $gte: 500 },
     isActive: true,
-  });
+  })
 
   if (!users.length) return [];
 

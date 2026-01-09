@@ -30,7 +30,6 @@ import {
   updatedbankdetails,
 } from "../controller/bankdetails.controller";
 import { payoutcontroller } from "../controller/payout.controller";
-import { postPayoutController } from "../controller/admin.postpayout.controller";
 
 // QR
 import {
@@ -104,7 +103,7 @@ Adminroutes.post(
   adminplan
 );
 
-// ✅ REQUIRED BY DASHBOARD
+// REQUIRED BY DASHBOARD
 // GET /api/admin/user/allplandetails
 Adminroutes.get(
   "/user/allplandetails",
@@ -171,14 +170,16 @@ Adminroutes.put(
 // GET /api/admin/getbankdetails
 Adminroutes.get(
   "/getbankdetails",
+  requireAdmin,
   getBankdetails
 );
 
 // GET /api/admin/payout
-Adminroutes.post(
-  "/payout",
-  postPayoutController
-);
+// Adminroutes.post(
+//   "/payout",
+//   requireAdmin,
+//   postPayoutController
+// );
 
 Adminroutes.get(
   "/payout",

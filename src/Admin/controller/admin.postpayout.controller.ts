@@ -85,7 +85,9 @@ export async function postPayoutController(req: Request, res: Response) {
     return res.status(200).json({
       success: true,
       message: "Payout processed successfully",
-      data: responseData,
+      autoCollection,
+      payoutUsers,
+      updatedCount,
     });
   } catch (error: any) {
     console.error("Payout error:", error);
