@@ -4,7 +4,7 @@ import IncomeHistory from "../Admin/models/admin.incomehistory";
 export const incomehistory = async (req: Request, res: Response) => {
   const userId = req.params.userId?.trim();
 
-  const history = await IncomeHistory.find({ userId }).sort({ createdAt: -1 });
+  const history = await IncomeHistory.find({ userId:userId }).sort({ createdAt: -1 });
 
   if (history.length === 0) {
     return res.status(200).json({
